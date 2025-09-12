@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sound Square</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.39/Tone.min.js"></script>
+  <style>
+    canvas {
+      background-color: blue;
+      display: block;
+      margin: 50px auto;
+      border: 2px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="soundCanvas" width="400" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById("soundCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const synth = new Tone.Synth().toDestination();
+
+    canvas.addEventListener("click", (event) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      // Normalize X and Y
+      const volume = Tone.gainToDb(x / canvas.width); // Convert to decibels
+      const pitch = 1000 - (y / canvas.height) * 800; // Range: 200Hz to 1000Hz
+
+      // Set volume and play note
+      synth.volume.value = volume;
+      synth.triggerAttackRelease(pitch, "8n");
+    });
+  </script>
+</body>
+</html>
